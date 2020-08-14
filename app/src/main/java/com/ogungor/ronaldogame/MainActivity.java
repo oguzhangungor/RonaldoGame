@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -32,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         imageButton = findViewById(R.id.imageButton);
         layoutTime = findViewById(R.id.layoutTime);
         layoutScore = findViewById(R.id.layoutScore);
-
-
         gameScore = 0;
         new CountDownTimer(10000, 1000) {
 
@@ -46,19 +45,22 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                textTime.setText("Time Finish!");
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                 alert.setTitle("Restart ?");
                 alert.setMessage("Are you sure restart game ? ");
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     }
                 });
                 alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Game Over", Toast.LENGTH_LONG).show();
                     }
                 });
                 alert.show();
