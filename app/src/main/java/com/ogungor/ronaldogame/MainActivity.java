@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton imageButton;
     LinearLayout layoutTime;
     LinearLayout layoutScore;
-    int gameScore = 0;
+    int gameScore;
     float randomLocation;
 
     @Override
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         imageButton = findViewById(R.id.imageButton);
         layoutTime = findViewById(R.id.layoutTime);
         layoutScore = findViewById(R.id.layoutScore);
-        textScore.setText(getString(R.string.score, gameScore));
 
 
         gameScore = 0;
@@ -41,31 +39,26 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long l) {
-                textTime.setText(getString(R.string.time) + l / 1000);
-                imageButton.setX(generateRandomAxis(1));
-                imageButton.setY(generateRandomAxis(2));
+                textTime.setText("Time: " + l / 1000);
+                imageButton.setX(Random(1));
+                imageButton.setY(Random(2));
             }
 
             @Override
             public void onFinish() {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                alert.setTitle(R.string.restart);
-                alert.setMessage(R.string.dialog_question);
-                alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                alert.setTitle("Restart ?");
+                alert.setMessage("Are you sure restart game ? ");
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
+                        Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_LONG).show();
                     }
                 });
-                alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        textTime.setText(R.string.timefinish);
-                        textScore.setText(getString(R.string.score, gameScore));
-                        textScore.setVisibility(View.INVISIBLE);
-                        Toast.makeText(MainActivity.this, getString(R.string.gameover) + getString(R.string.score, gameScore), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this,"Saved",Toast.LENGTH_LONG).show();
                     }
                 });
                 alert.show();
@@ -78,35 +71,31 @@ public class MainActivity extends AppCompatActivity {
 
     ;
 
-    public float generateRandomAxis(int position) {
+    public float Random(int position) {
         int imageWidth = imageButton.getWidth();
         int imageHeight = imageButton.getHeight();
-        int randomMin;
-        int randomMax;
 
         if (position == 1) {
-            randomMin = 0;
-            randomMax = layoutTime.getWidth() - imageWidth;
+            int randomMin = 0;
+            int randomMax = layoutTime.getWidth() - imageWidth;
+            Random rand = new Random();
+
+            int a = randomMax - imageWidth;
+            randomLocation = rand.nextInt((randomMax - randomMin) + 1) + randomMin;
 
         } else {
-            randomMin = layoutTime.getHeight();
+            int randomMin = layoutTime.getHeight();
             int windowsHeight = getWindowManager().getDefaultDisplay().getHeight();
-            randomMax = (windowsHeight - (layoutScore.getHeight() + imageHeight + layoutTime.getHeight()));
+
+            int randomMax = (windowsHeight - (layoutScore.getHeight() + imageHeight + layoutTime.getHeight()));
+            Random rand = new Random();
+            randomLocation = rand.nextInt((randomMax - randomMin) + 1) + randomMin;
         }
-        return randomLocation = generateRandom(randomMax, randomMin);
+        return randomLocation;
     }
 
     public void score(View view) {
         gameScore++;
-        textScore.setText(getString(R.string.score, gameScore));
+        textScore.setText("Score: " + gameScore);
     }
-
-    public float generateRandom(int randomMax, int randomMin) {
-        Random rand = new Random();
-        randomLocation = rand.nextInt((randomMax - randomMin) + 1) + randomMin;
-        return randomLocation;
-    }
-
-    ;
-
 }
